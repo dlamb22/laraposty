@@ -8,7 +8,9 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     public function index() {
-        return view('posts.index');
+        // Get all the post to output to screen
+        $posts = Post::orderBy('created_at', 'desc')->paginate(5);
+        return view('posts.index')->with('posts', $posts);
     }
 
     public function store(Request $request) {
@@ -22,11 +24,6 @@ class PostController extends Controller
             'body' => $request->body
         ]);
 
-        return back();
-
-        // Post::create([
-        //     'user_id' => auth()->id(),
-        //     'body' => $request->body
-        // ]);
+        return redirect()->route('posts');
     }
 }
