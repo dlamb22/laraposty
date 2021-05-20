@@ -9,7 +9,7 @@ class PostController extends Controller
 {
     public function index() {
         // Get all the post to output to screen
-        $posts = Post::orderBy('created_at', 'desc')->paginate(5);
+        $posts = Post::with(['user', 'likes'])->orderBy('created_at', 'desc')->paginate(5);
         return view('posts.index')->with('posts', $posts);
     }
 
@@ -25,5 +25,15 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('posts');
+    }
+
+    public function destroy(Post $post) {
+        if ($post->ownedBy(auth()->user())) {
+            //
+        }
+
+        $post->delete();
+
+        return back();
     }
 }
